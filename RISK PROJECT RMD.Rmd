@@ -1,0 +1,66 @@
+---
+title: "Project"
+output: pdf_document
+date: "2023-04-05"
+---
+
+# LOAN RISK PREDICTION MODEL USING DECISION TREE
+
+## DATA LOADING
+```{r}
+data=read.csv("credit_risk_dataset.csv")
+```
+
+```{r}
+head(data)
+```
+
+## DATA PREPROCESSING
+```{r}
+#Checking for any missing values in the dataset.
+sum(is.na(data))
+```
+There are missing values in the dataset. We need to remove the missing values from the dataset.
+
+```{r}
+#Removing rows with missing values
+data=na.omit(data)
+sum(is.na(data))
+```
+
+All the missing values have been removed from the dataset.
+
+```{r}
+#Checking the datatype of each column in R
+str(data)
+```
+
+All the datatypes are correct, So no need of changing. The data pre processing is done.
+
+## DATA VISUALISATION
+
+
+### PLOTTING A SCATTERPLOT BETWEEN THE INCOME AND LOAN AMOUNT
+```{r}
+library(ggplot2)
+pt=ggplot(data=data)+geom_point(aes(y = data$person_income, x = data$loan_amnt))+labs(y = "Person Income", x = "Loan Amount", title = "Scatterplot of Person Income vs Loan Amount")
+print(pt)
+```
+
+```{r}
+pt2=ggplot(data=data)+geom_boxplot(aes(x = data$loan_grade, y = data$loan_int_rate))+labs(x = "Loan Grade", y = "Loan Interest Rate", title = "Boxplot of Loan Grade vs Loan Interest Rate")
+plot(pt2)
+```
+We can see that the Interest Rates are considerably increasing with the level of Loan Grades.
+
+## DATA SPLITTING
+
+We have a large dataset of nearly 30,000 observations. So we can use more data to train. The preferable ratio will be 90% to training data and 10% to testing data.
+
+```{r}
+library(caret)
+train_index <- createDataPartition(data$loan_status, p = 0.9, list = FALSE)
+train_data <- data[train_index, ] 
+test_data <- data[-train_index, ]
+```
+
